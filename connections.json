@@ -1,10 +1,28 @@
-{[
-    'gmail.com': {
-        incoming:{
-            type:'imap',
-            host:'imap.gmail.com',
-            port:'993'
-            TSL:true
+{
+    "gmail.com": {
+        "incoming": {
+            "type": "imap",
+            "host": "imap.gmail.com",
+            "port": "993",
+            "tls": true
+        }
+    },
+    "outlook.com": {
+        "incoming": {
+            "type": "imap",
+            "host": "imap.outlook.com",
+            "port": "993",
+            "tls": true
+        }
+    },
+   "yahoo.com": {
+        "incoming": {
+            "type": "imap",
+            "host": "imap.yahoo.com",
+            "port": "993",
+            "tls": true
         }
     }
-]}
+
+    
+}

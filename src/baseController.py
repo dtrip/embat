@@ -1,18 +1,33 @@
 from cement.core import controller
+from cement.utils.misc import init_defaults
 from time import sleep
 import csv
+import Credentials
+import Imap
+
+defaults = init_defaults('EmBat')
+
+defaults['EmBat']['imap'] = True
+defaults['EmBat']['pop'] = False
+
 
 class baseController(controller.CementBaseController):
+
+    imap = Imap.Imap()
+
     class Meta:
         interface = controller.IController
         label = 'base'
+        config_defaults = defaults
         description = 'Email batch credential verifer'
 
-        config_defaults = {}
 
         arguments = [
+                # TODO Verify STMP
                 (['-c', '--csv'], dict(action='store', help='CSV file containing email login and password')),
-                (['-v', '--verbose'], dict(action='store_true', help='Verbose Output'))
+                (['-v', '--verbose'], dict(action='store_true', help='Verbose Output')),
+                (['-p', '--pop'], dict(action='store_true', help='force connection to POP3 (default: False)')),
+                (['-i', '--imap'], dict(action='store_true', help='force connection to IMAP (default: True)'))
                 ]
 
     @controller.expose(hide=True, aliases=['run'])
@@ -27,6 +42,8 @@ class baseController(controller.CementBaseController):
 
         c = None
 
+        cred = Credentials.Credentials()
+
         try:
 
             lines = 0
@@ -40,7 +57,7 @@ class baseController(controller.CementBaseController):
 
             #default email/password columns
             emailCol = 0
-            passwdCol = 0
+            passwdCol = 1
             hasHeader = True
 
             # gets some basic info about file to properly parse file
@@ -51,7 +68,7 @@ class baseController(controller.CementBaseController):
                 lines -= 1
 
             emailCol = int(raw_input("[?] Enter column number of email login. 0 equals column A. [0]: ") or emailCol)
-            passwdCol =  int(raw_input("[?] Enter column number of passwords [0]: ") or passwdCol)
+            passwdCol =  int(raw_input("[?] Enter column number of passwords [1]: ") or passwdCol)
 
             for k,r in enumerate(ch):
 
@@ -60,13 +77,31 @@ class baseController(controller.CementBaseController):
                         print("[!] Skipping header row")
                     continue
 
-                print("[%s] Checking: %s:%s" % ((k + 1),r[emailCol], r[passwdCol]))
+                email = cred.checkEmail(r[emailCol])
+                pw = cred.checkPassword(r[passwdCol])
+
+                if (email == False):
+                    print("[-] Not a valid email address... skipping.")
+                    continue
+
+                if (pw == False):
+                    print("[-] Password is empty... skipping.")
+                    continue
+
+                print("[%s] Checking: %s:%s" % ((k + 1), email, pw))
+
+                if (self.app.pargs.imap):
+                    validImap = self.imap.checkAccount(email, pw)
+
+                if (self.app.pargs.pop):
+                    print("POP not currently supported")
+
                 sleep(1)
 
         except ValueError:
             print("Invalid Integer")
         except Exception as e:
-            print("Error parsing CSV File: %s" % str(e))
+            print("[!] Error parsing CSV File: %s" % str(e))
         finally:
             c.close()
 

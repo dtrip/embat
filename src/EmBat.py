@@ -1,6 +1,7 @@
 
 import sys
 import os
+import json
 
 from cement.core import foundation,handler
 
@@ -22,13 +23,12 @@ class EmBat:
             app = foundation.CementApp('EmBat')
 
             handler.register(baseController.baseController)
-            handler.register(Imap.Imap)
 
             app.setup()
 
             app.run()
         except Exception as e:
-            print("Error: %s" % str(e))
+            print("[-] Error: %s\nExiting" % str(e))
         finally:
             app.close()
 

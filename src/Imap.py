@@ -1,25 +1,37 @@
+import Credentials
+import imaplib
+from pprint import pprint
 
-from cement.core import controller
-
-class Imap(controller.CementBaseController):
-    class Meta:
-        interface = controller.IController
-        label = 'Imap'
-        description = 'Object that performs Imap connection testing'
-        stacked_on = 'base'
-
-    @controller.expose(hide=True, help='default command', aliases=['start'])
-    def login(self):
-
-        if (self.app.pargs.verbose):
-            print("Imap connection is starting ...")
-
-        self.__checkConnection()
-
-        return True
+class Imap:
+    creds = Credentials.Credentials()
 
 
-    def __checkConnection(self):
-        print("CHecking")
-  
-        return True
+    def init(self):
+        pass
+
+    def checkAccount(self, email, pw):
+
+        con = Imap.creds.getConnectionInfo(email)
+
+        if (con == False):
+            print("[!]\tNo connection data in connections.json!")
+        else:
+            print("[!]\tTesting Imap connection ...")
+
+            c = None
+
+            pprint(con)
+
+            try:
+                c = imaplib.IMAP4_SSL(con.host)
+                c.login(email, pw)
+                print("Success!")
+                return True
+            except Exception as e:
+                print("[-] Fail: %s" % str(e))
+            finally:
+                if (c is not None):
+                    c.logout()
+
+        return False
+
