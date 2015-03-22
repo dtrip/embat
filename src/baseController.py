@@ -1,29 +1,35 @@
-from cement.core import handler,controller
+from cement.core import handler,controller, backend, handler
 from cement.utils.misc import init_defaults
 from colorama import init, Fore, Back, Style
+from pprint import pprint
 from time import sleep
 import csv
 import traceback
 import Credentials
 import Imap
+import Tor
 import Output
-
-defaults = init_defaults('EmBat')
-
-defaults['EmBat']['imap'] = True
-defaults['EmBat']['pop'] = False
-
 
 class baseController(controller.CementBaseController):
 
     imap = Imap.Imap()
+    tor = Tor.Tor()
 
     class Meta:
         interface = controller.IController
         label = 'base'
-        config_defaults = defaults
+        # config_defaults = defaults
         description = 'Email batch credential verifer'
 
+        # default values
+        config_defaults = dict(
+                debug = False,
+                imap = 'True',
+                pop = False,
+                tor = False,
+                torport = 7000,
+                delay = '0.5'
+                )
 
         arguments = [
                 # TODO Verify STMP
@@ -31,8 +37,15 @@ class baseController(controller.CementBaseController):
                 (['-o', '--output'], dict(action='store', help='Output CSV file of successful logins')),
                 (['-v', '--verbose'], dict(action='store_true', help='Verbose Output')),
                 (['-p', '--pop'], dict(action='store_true', help='force connection to POP3 (default: False)')),
-                (['-i', '--imap'], dict(action='store_true', help='force connection to IMAP (default: True)'))
+                (['-i', '--imap'], dict(action='store_true', help='force connection to IMAP (default: True)')),
+                (['-d', '--delay'], dict(action='store', help='Delay in seconds after login attempt (default: 0.5)')),
+                (['-t', '--tor'], dict(action='store_true', help='Connect to Tor? (default: False)')),
+                (['-z', '--torport'], dict(action='store', help='Tor port (default: 7000)'))
                 ]
+
+        epilog = "Sample Usage: EmBat --csv ~/emails.csv -i -o ~/results.csv -t -z 7000"
+
+
 
     @controller.expose(hide=True, aliases=['run'])
     def default(self):
@@ -45,10 +58,14 @@ class baseController(controller.CementBaseController):
     def __parseCSV(self):
 
         c = None
-
         cred = Credentials.Credentials()
 
         try:
+            pprint(self.app.pargs)
+
+            # if tor flag isset will attempt to connect
+            if (self.app.pargs.tor):
+                self.tor.connect(self.app.pargs.torport);
 
             lines = 0
             c = open(self.app.pargs.csv)
@@ -56,8 +73,8 @@ class baseController(controller.CementBaseController):
 
             # lines = int(len(list(ch)))
 
-            if (self.app.pargs.verbose):
-                print("[!] Total Lines: %u" % lines)
+            # if (self.app.pargs.verbose):
+                # print("[!] Total Lines: %u" % lines)
 
             #default email/password columns
             emailCol = 0
@@ -83,7 +100,7 @@ class baseController(controller.CementBaseController):
 
                 if (k == 0 and hasHeader == True):
                     if (self.app.pargs.verbose):
-                        print("[!] Skipping header row")
+                        print("\n[!] Skipping header row")
                     continue
 
                 email = cred.checkEmail(r[emailCol])
@@ -94,10 +111,10 @@ class baseController(controller.CementBaseController):
                     continue
 
                 if (pw == False):
-                    print("\n" + Fore.RED + "[-] Password is empty... skipping." + Style.RESET_ALL)
+                    print(Fore.RED + "[-] " + email + ": Password is empty... skipping." + Style.RESET_ALL + "\n")
                     continue
 
-                print("\n" + Style.BRIGHT + "[" + str(k + 1) + "] Checking: " + email + ":" +  pw + Style.RESET_ALL)
+                print(Style.BRIGHT + "[" + str(k + 1) + "] Checking: " + email + ":" +  pw + Style.RESET_ALL)
 
                 if (self.app.pargs.imap):
                     validImap = self.imap.checkAccount(email, pw)
@@ -109,7 +126,10 @@ class baseController(controller.CementBaseController):
                     if (self.app.pargs.pop):
                         print("POP not currently supported")
 
-                # sleep(1)
+                # if delay is set
+                # print('DELAY:' + self.app.pargs.delay)
+                if float(self.app.pargs.delay or 0.5) > 0:
+                    sleep(float(self.app.pargs.delay or 0.5))
 
         except ValueError:
             print(Style.BRIGHT + Fore.RED + "[-] Invalid input value: " + str(e) + Style.RESET_ALL)
@@ -118,6 +138,10 @@ class baseController(controller.CementBaseController):
             print traceback.format_exc()
         finally:
             c.close()
+
+            # if tor flag is set, will disconnect before exiting
+            if (self.app.pargs.tor):
+                baseController.tor.disconnect();
 
         print("\n" + Style.BRIGHT + "[*] Finished. Exiting!" + Style.RESET_ALL + "\n")
 

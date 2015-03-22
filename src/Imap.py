@@ -16,7 +16,7 @@ class Imap:
         con = Imap.creds.getConnectionInfo(email)
 
         if (con == False):
-            print(Fore.RED + "[!]\tNo connection data in connections.json!" + Style.RESET_ALL)
+            print(Fore.RED + "[!]\tNo connection data in connections.json!" + Style.RESET_ALL + "\n")
         else:
             print("[!]\tTesting Imap connection: " + con['host'] + " ...")
 
@@ -28,14 +28,18 @@ class Imap:
                 c = imaplib.IMAP4_SSL(con['host'])
 
                 #5 second timeout
-                socket.setdefaulttimeout(5)
+                # socket.setdefaulttimeout(5)
 
                 c.login(email, pw)
-                print(Style.BRIGHT + Fore.GREEN + "[+]\tSuccess!" + Style.RESET_ALL)
+                print(Style.BRIGHT + Fore.GREEN + "[+]\tSuccess!" + Style.RESET_ALL + "\n")
                 return True
+            except imaplib.IMAP4.abort as e:
+                print(Style.BRIGHT + Fore.YELLOW + "[-]\tIMAP Aborted: " + str(e) + Style.RESET_ALL + "\n")
+            except imaplib.IMAP4.error as ie:
+                print(Style.BRIGHT + Fore.RED + "[-]\tIMAP Error: " + str(ie) + Style.RESET_ALL + "\n")
             except Exception as e:
-                print(Style.BRIGHT + Fore.RED + "[-]\tFail: " + str(e) + Style.RESET_ALL)
-                # print traceback.format_exc()
+                print(Style.BRIGHT + Fore.RED + "[-]\tFail: " + str(e) + Style.RESET_ALL + "\n")
+                print traceback.format_exc()
             finally:
                 if (c is not None):
                     c.logout()

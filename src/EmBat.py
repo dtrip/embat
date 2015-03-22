@@ -13,7 +13,6 @@ import Imap
 print("\n__ EmBat: Batch E-mail credential verifier __\n")
 print("Disclaimer: Be good, or be good at it.\n")
 
-
 class EmBat:
     def init(self):
         pass

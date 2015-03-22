@@ -4,15 +4,19 @@ setup(
     name = "EmBat",
     version = "0.1",
     packages = find_packages(),
-    scripts = ['src/Imap.py', 'src/baseController.py', 'src/Credentials.py', 'src/EmBat.py'],
-    
+    scripts = ['src/Imap.py', 'src/baseController.py', 'src/Credentials.py', 'src/EmBat.py', 'src/Tor.py'],
+
     entry_points = {
         "console_scripts": [
             "EmBat = EmBat:run"
             ]
         },
 
-    install_requires = ["cement==2.4.0", "colorama==0.2.5"],
+    install_requires = [
+        "cement==2.4.0",
+        "colorama==0.2.5",
+        "stem==1.3.0"
+        ],
 
     author = "Dtripp",
     author_email = "dtrippx@gmail.com",
