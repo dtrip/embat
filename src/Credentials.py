@@ -1,6 +1,7 @@
 import traceback
 from pprint import pprint
 from cement.core import controller
+from colorama import init, Fore, Back, Style
 import json
 import sys
 
@@ -70,7 +71,7 @@ class Credentials(controller.CementBaseController):
             d = self.__getEmailDomain(email)
 
             # if (self.app.pargs.verbose):
-            print("[!]\tGetting connection info for %s from %s" % (d, Credentials.jcon))
+            print(Fore.YELLOW + "[!]\tGetting connection info for " + d + Style.RESET_ALL)
             
             with open(Credentials.jcon) as conData:
                 # print(conData.read())

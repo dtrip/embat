@@ -12,7 +12,7 @@ setup(
             ]
         },
 
-    install_requires = [ ],
+    install_requires = ["cement==2.4.0", "colorama==0.2.5"],
 
     author = "Dtripp",
     author_email = "dtrippx@gmail.com",

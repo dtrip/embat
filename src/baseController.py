@@ -1,5 +1,6 @@
 from cement.core import controller
 from cement.utils.misc import init_defaults
+from colorama import init, Fore, Back, Style
 from time import sleep
 import csv
 import Credentials
@@ -85,10 +86,10 @@ class baseController(controller.CementBaseController):
                     continue
 
                 if (pw == False):
-                    print("[-] Password is empty... skipping.")
+                    print(Fore.YELLOW + "[-] Password is empty... skipping." + Style.RESET_ALL)
                     continue
 
-                print("[%s] Checking: %s:%s" % ((k + 1), email, pw))
+                print("\n" + Style.BRIGHT + "[" + str(k + 1) + "] Checking: " + email + ":" +  pw + Style.RESET_ALL)
 
                 if (self.app.pargs.imap):
                     validImap = self.imap.checkAccount(email, pw)
