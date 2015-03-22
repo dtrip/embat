@@ -119,4 +119,6 @@ class baseController(controller.CementBaseController):
         finally:
             c.close()
 
+        print("\n" + Style.BRIGHT + "[*] Finished. Exiting!" + Style.RESET_ALL + "\n")
+
         return True

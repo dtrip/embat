@@ -49,6 +49,18 @@
         "tls": true
     }
 },{
+    "domain": "sbcglobal.net",
+    "imap": {
+        "host": "imap.mail.yahoo.com",
+        "port": "993",
+        "tls": true
+    },
+    "pop": {
+        "host": "pop.mail.yahoo.com",
+        "port": "995",
+        "tls": true
+    }
+},{
     "domain":"yahoo.com",
     "imap": {
         "host": "imap.mail.yahoo.com",
