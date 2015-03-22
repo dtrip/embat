@@ -7,6 +7,41 @@
         "tls": true
     }
 },{
+    "domain": "aol.com",
+    "imap": {
+        "host": "imap.aol.com",
+        "port": "143",
+        "tls": false
+    }
+},{
+    "domain": "att.net",
+    "imap": {
+        "host": "imap.mail.att.net",
+        "port": "993",
+        "tls": true
+    }
+},{
+    "domain": "cox.net",
+    "imap": {
+        "host": "imap.cox.net",
+        "port": "993",
+        "tls": true
+    }
+},{
+    "domain": "icloud.com",
+    "imap": {
+        "host": "imap.mail.me.com",
+        "port": "993",
+        "tls": true
+    }
+},{
+    "domain": "hotmail.com",
+    "imap": {
+        "host": "imap-mail.outlook.com",
+        "port": "993",
+        "tls": true
+    }
+},{
     "domain": "outlook.com",
     "imap": {
         "host": "imap-mail.outlook.com",

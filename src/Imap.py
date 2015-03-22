@@ -18,7 +18,7 @@ class Imap:
         if (con == False):
             print(Fore.RED + "[!]\tNo connection data in connections.json!" + Style.RESET_ALL)
         else:
-            print("[!]\tTesting Imap connection ...")
+            print("[!]\tTesting Imap connection: " + con['host'] + " ...")
 
             c = None
 
