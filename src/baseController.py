@@ -76,7 +76,7 @@ class baseController(controller.CementBaseController):
 
             o = Output.Output();
             if (self.app.pargs.output is not None):
-                print("OUTPUT:" + self.app.pargs.output)
+                # print("OUTPUT:" + self.app.pargs.output)
                 oFile = o.createFile(self.app.pargs.output)
 
             for k,r in enumerate(ch):
@@ -94,7 +94,7 @@ class baseController(controller.CementBaseController):
                     continue
 
                 if (pw == False):
-                    print(Fore.YELLOW + "[-] Password is empty... skipping." + Style.RESET_ALL)
+                    print("\n" + Fore.RED + "[-] Password is empty... skipping." + Style.RESET_ALL)
                     continue
 
                 print("\n" + Style.BRIGHT + "[" + str(k + 1) + "] Checking: " + email + ":" +  pw + Style.RESET_ALL)

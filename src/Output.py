@@ -22,7 +22,7 @@ class Output:
 
     def __initFileSetup(self):
         Output.f.write("Email Address, Password\n")
-        print("output file has been initiated")
+        # print("output file has been initiated")
         return True
 
     def addRow(self, email, pw):
