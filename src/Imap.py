@@ -1,4 +1,5 @@
 import Credentials
+import traceback
 import imaplib
 import socket
 from colorama import init, Fore, Back, Style
@@ -34,6 +35,7 @@ class Imap:
                 return True
             except Exception as e:
                 print(Style.BRIGHT + Fore.RED + "[-]\tFail: " + str(e) + Style.RESET_ALL)
+                print traceback.format_exc()
             finally:
                 if (c is not None):
                     c.logout()

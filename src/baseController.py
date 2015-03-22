@@ -1,10 +1,12 @@
-from cement.core import controller
+from cement.core import handler,controller
 from cement.utils.misc import init_defaults
 from colorama import init, Fore, Back, Style
 from time import sleep
 import csv
+import traceback
 import Credentials
 import Imap
+import Output
 
 defaults = init_defaults('EmBat')
 
@@ -26,6 +28,7 @@ class baseController(controller.CementBaseController):
         arguments = [
                 # TODO Verify STMP
                 (['-c', '--csv'], dict(action='store', help='CSV file containing email login and password')),
+                (['-o', '--output'], dict(action='store', help='Output CSV file of successful logins')),
                 (['-v', '--verbose'], dict(action='store_true', help='Verbose Output')),
                 (['-p', '--pop'], dict(action='store_true', help='force connection to POP3 (default: False)')),
                 (['-i', '--imap'], dict(action='store_true', help='force connection to IMAP (default: True)'))
@@ -71,6 +74,11 @@ class baseController(controller.CementBaseController):
             emailCol = int(raw_input("[?] Enter column number of email login. 0 equals column A. [0]: ") or emailCol)
             passwdCol =  int(raw_input("[?] Enter column number of passwords [1]: ") or passwdCol)
 
+            o = Output.Output();
+
+            if (self.app.pargs.output is not None):
+                oFile = o.createFile(self.app.pargs.output)
+
             for k,r in enumerate(ch):
 
                 if (k == 0 and hasHeader == True):
@@ -94,15 +102,20 @@ class baseController(controller.CementBaseController):
                 if (self.app.pargs.imap):
                     validImap = self.imap.checkAccount(email, pw)
 
-                if (self.app.pargs.pop):
-                    print("POP not currently supported")
+                    if (validImap and self.app.pargs.output is not None):
+                        o.addRow(email, pw)
 
-                sleep(1)
+                    # if valid login and saving success result - will add csv row
+                    if (self.app.pargs.pop):
+                        print("POP not currently supported")
+
+                # sleep(1)
 
         except ValueError:
-            print("Invalid Integer")
+            print(Style.BRIGHT + Fore.RED + "[-] Invalid input value: " + str(e) + Style.RESET_ALL)
         except Exception as e:
-            print("[!] Error parsing CSV File: %s" % str(e))
+            print(Style.BRIGHT + Fore.RED + "[-] Error parsing CSV File: " + str(e) + Style.RESET_ALL)
+            print traceback.format_exc()
         finally:
             c.close()
 
