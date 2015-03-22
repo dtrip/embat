@@ -1,0 +1,10 @@
+{[
+    'gmail.com': {
+        incoming:{
+            type:'imap',
+            host:'imap.gmail.com',
+            port:'993'
+            TSL:true
+        }
+    }
+]}

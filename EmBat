@@ -1,0 +1,6 @@
+#!/bin/sh
+
+PY=$(which python)
+DIR=$(dirname $(readlink -e $0))
+
+$PY $DIR/src/EmBat.py $@
