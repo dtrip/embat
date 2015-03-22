@@ -1,5 +1,6 @@
 import Credentials
 import imaplib
+import socket
 from pprint import pprint
 
 class Imap:
@@ -20,15 +21,19 @@ class Imap:
 
             c = None
 
-            pprint(con)
+            # print(con['host'])
 
             try:
-                c = imaplib.IMAP4_SSL(con.host)
+                c = imaplib.IMAP4_SSL(con['host'])
+
+                #5 second timeout
+                socket.setdefaulttimeout(5)
+
                 c.login(email, pw)
-                print("Success!")
+                print("[+]\tSuccess!")
                 return True
             except Exception as e:
-                print("[-] Fail: %s" % str(e))
+                print("[-]\tFail: %s" % str(e))
             finally:
                 if (c is not None):
                     c.logout()

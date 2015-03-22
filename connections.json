@@ -1,28 +1,23 @@
-{
-    "gmail.com": {
-        "incoming": {
-            "type": "imap",
-            "host": "imap.gmail.com",
-            "port": "993",
-            "tls": true
-        }
-    },
-    "outlook.com": {
-        "incoming": {
-            "type": "imap",
-            "host": "imap.outlook.com",
-            "port": "993",
-            "tls": true
-        }
-    },
-   "yahoo.com": {
-        "incoming": {
-            "type": "imap",
-            "host": "imap.yahoo.com",
-            "port": "993",
-            "tls": true
-        }
-    }
+[{
 
-    
-}
+    "domain":"gmail.com",
+    "imap": {
+        "host": "imap.gmail.com",
+        "port": "993",
+        "tls": true
+    }
+},{
+    "domain": "outlook.com",
+    "imap": {
+        "host": "imap-mail.outlook.com",
+        "port": "993",
+        "tls": true
+    }
+},{
+    "domain":"yahoo.com",
+    "imap": {
+        "host": "imap.mail.yahoo.com",
+        "port": "993",
+        "tls": true
+    }
+}]

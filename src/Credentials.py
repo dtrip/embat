@@ -1,15 +1,21 @@
 import traceback
 from pprint import pprint
+from cement.core import controller
 import json
 import sys
 
-class Credentials:
+class Credentials(controller.CementBaseController):
+    class meta:
+        interface = controller.IController
+        label = 'credentials'
+        description = 'Validates e-mail address'
 
     jcon = 'connections.json'
 
-    def init(self):
-        pass
+    # def init(self):
+        # pass
 
+    @controller.expose(hide=True, aliases=['checkEmail'])
     def checkEmail(self, email):
 
         # casts, trims email address
@@ -45,7 +51,7 @@ class Credentials:
         ap = 0
 
         # if (self.app.pargs.verbose):
-        print("[!]\tParsing E-mail domain")
+            # print("[!]\tParsing E-mail domain")
 
         ap = email.index('@')
         domain = email[(ap + 1):]
@@ -67,17 +73,20 @@ class Credentials:
             print("[!]\tGetting connection info for %s from %s" % (d, Credentials.jcon))
             
             with open(Credentials.jcon) as conData:
+                # print(conData.read())
                 jcons = json.loads(conData.read())
+
+                # print(jcons)
 
                 for domain in jcons:
 
-                    # print('checking: %s' % domain)
-                    if (d.lower() == domain.lower()):
+                    # print('checking: %s' % domain['domain'])
+                    if (d.lower() == domain['domain']):
 
                         # if (self.app.pargs.verbose):
-                        print("[+]\tFound connection settings")
+                            # print("[+]\tFound connection settings")
 
-                        i = domain
+                        i = domain['imap']
                         break
                     else:
                         continue
