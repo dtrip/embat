@@ -35,7 +35,7 @@ class Imap:
                 return True
             except Exception as e:
                 print(Style.BRIGHT + Fore.RED + "[-]\tFail: " + str(e) + Style.RESET_ALL)
-                print traceback.format_exc()
+                # print traceback.format_exc()
             finally:
                 if (c is not None):
                     c.logout()

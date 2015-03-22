@@ -14,7 +14,7 @@ class Output:
         else:
             Output.f = file(outputFile, "w")
             self.__initFileSetup()
-        return f
+        return Output.f
 
     def __initFileSetup(self):
         Output.f.write("Email Address, Password\n")
