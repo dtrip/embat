@@ -75,8 +75,8 @@ class baseController(controller.CementBaseController):
             passwdCol =  int(raw_input("[?] Enter column number of passwords [1]: ") or passwdCol)
 
             o = Output.Output();
-
             if (self.app.pargs.output is not None):
+                print("OUTPUT:" + self.app.pargs.output)
                 oFile = o.createFile(self.app.pargs.output)
 
             for k,r in enumerate(ch):
@@ -102,7 +102,7 @@ class baseController(controller.CementBaseController):
                 if (self.app.pargs.imap):
                     validImap = self.imap.checkAccount(email, pw)
 
-                    if (validImap and self.app.pargs.output is not None):
+                    if (validImap == True and self.app.pargs.output is not None):
                         o.addRow(email, pw)
 
                     # if valid login and saving success result - will add csv row

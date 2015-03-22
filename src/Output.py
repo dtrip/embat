@@ -1,4 +1,5 @@
 import os
+from colorama import init, Fore, Back, Style
 
 class Output:
     f = None
@@ -8,16 +9,20 @@ class Output:
 
     def createFile(self, outputFile):
 
-        if (os.path.exists(outputFile)):
-            # opens file if exists and appends to it
-            Output.f = open(outputFile, "a+")
-        else:
-            Output.f = file(outputFile, "w")
-            self.__initFileSetup()
+        try:
+            if (os.path.exists(outputFile)):
+                # opens file if exists and appends to it
+                Output.f = open(outputFile, "w")
+            else:
+                Output.f = file(outputFile, "w")
+                self.__initFileSetup()
+        except Exception as e:
+            print(Style.BRIGHT + Fore.RED + "[-] Error: " + str(e) + Style.RESET_ALL)
         return Output.f
 
     def __initFileSetup(self):
         Output.f.write("Email Address, Password\n")
+        print("output file has been initiated")
         return True
 
     def addRow(self, email, pw):
